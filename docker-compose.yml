@@ -1,0 +1,70 @@
+version: '3'
+services:
+  informix-hqserver:
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
+      container_name: "hqserver"
+      hostname: "hqserver"
+      environment:
+          LICENSE:     'accept'
+          SIZE:        'small'
+          HQSERVER:    'start'
+      ports:
+         - 80:8080 
+  informix-server1:
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
+      container_name: "server1"
+      hostname: "server1"
+      #domainname: "composehademo_default"
+      privileged: true
+      environment:
+          LICENSE:     'accept'
+          SIZE:        'small'
+          DBSERVERNAME: 'informix_1'
+          HA: 'PRI'
+          #RUN_FILE_POST_INIT: post_setup.sh
+          HQSERVER: 'hqserver'
+          HQAGENT: 'start'
+      ports:
+         - 27018:27018
+      volumes:
+          - ${PWD}/informix-server1:/opt/ibm/files
+  informix-server2:
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
+      container_name: "server2"
+      hostname: "server2"
+      #domainname: "composehademo_default"
+      privileged: true
+      environment:
+          LICENSE:     'accept'
+          SIZE:        'small'
+          DBSERVERNAME: 'informix_2'
+          HA: 'SEC'
+          HA_PRIMARY: 'server1'
+          HA_PRI_DBSERVERNAME: 'informix_1'
+          #RUN_FILE_POST_INIT: post_setup.sh
+          HQSERVER: 'hqserver'
+          HQAGENT: 'start'
+      volumes:
+          - ${PWD}/informix-server2:/opt/ibm/files
+  informix-server3:
+      #image: "ibmcom/informix-developer-database"
+      image: "informix-developer-edition"
+      container_name: "server3"
+      hostname: "server3"
+      #domainname: "composehademo_default"
+      privileged: true
+      environment:
+          LICENSE:     'accept'
+          SIZE:        'small'
+          DBSERVERNAME: 'informix_3'
+          HA: 'RSS'
+          HA_PRIMARY: 'server1'
+          HA_PRI_DBSERVERNAME: 'informix_1'
+          #RUN_FILE_POST_INIT: post_setup.sh
+          HQSERVER: 'hqserver'
+          HQAGENT: 'start'
+      volumes:
+          - ${PWD}/informix-server3:/opt/ibm/files

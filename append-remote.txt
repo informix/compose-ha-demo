@@ -1,0 +1,19 @@
+APPEND REMOTE FILE
+1.  Install ssh (openssh-server)
+2.  install sshpass
+
+
+From remote  IE server2, do the following:
+sshpass -p "in4mix" ssh informix@server1 'echo "appended line" >> /tmp/file1'
+sshpass -p $INFORMIX_PASSWORD ssh informix@server1 'echo "appended line" >> /tmp/file1'
+
+
+EXECUTE SCRIPT ON REMOTE server
+on server 2
+sshpass -p "in4mix" ssh informix@server1 'bash -s' < mytest.ssh
+where mytest.sh is a local script
+
+
+
+
+
